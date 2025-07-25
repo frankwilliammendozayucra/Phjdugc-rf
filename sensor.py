@@ -8,13 +8,13 @@ import time
 # Configuración de la página
 st.set_page_config(page_title="Sistema Eco ESP32", layout="wide")
 
-# Contenedor para actualizar los datos
+# Contenedor de actualización
 placeholder = st.empty()
 
-# Bucle de actualización
-for _ in range(1):  # solo una vez para cada recarga
+# Bucle principal de visualización (se recarga con experimental_rerun)
+for _ in range(1):
     with placeholder.container():
-        # === ENCABEZADO ===
+        # === TÍTULO ===
         st.markdown("""
             <h1 style='text-align: center; color: #2e7d32;'>🌱 Sistema de Monitoreo Eco ESP32</h1>
             <p style='text-align: center; color: #388e3c;'>Monitoreo inteligente de ambiente y suelo en tiempo real</p>
@@ -23,6 +23,7 @@ for _ in range(1):  # solo una vez para cada recarga
         estado = random.choice(["En línea", "Desconectado"])
         color = "#4caf50" if estado == "En línea" else "#f44336"
         st.markdown(f"<div style='text-align:center; color:{color}; font-weight:600;'>🔌 Estado del sistema: {estado}</div>", unsafe_allow_html=True)
+
         st.markdown("---")
 
         # === SENSORES ===
@@ -50,12 +51,16 @@ for _ in range(1):  # solo una vez para cada recarga
         def estado_dispositivo(nombre, emoji):
             on = random.choice([True, False])
             status = "Encendido" if on else "Apagado"
-            badge_color = "green" if on else "gray"
+            bgcolor = "#2E7D32" if on else "#616161"
             st.markdown(f"""
-                <div style='text-align:center;'>
-                    <div style='font-size:2rem'>{emoji}</div>
-                    <strong style='color:#2e7d32;'>{nombre}</strong><br>
-                    <span style='background:{badge_color}; color:white; padding:8px 20px; border-radius:25px;'>{status}</span>
+                <div style='text-align:center; margin-bottom:20px;'>
+                    <div style='font-size:2.5rem;'>{emoji}</div>
+                    <div style='font-weight:600; color:#2e7d32; margin-top:5px;'>{nombre}</div>
+                    <div style='display:inline-block; background:{bgcolor}; color:white;
+                                padding:6px 22px; border-radius:20px; font-size:0.9rem;
+                                margin-top:8px;'>
+                        {status}
+                    </div>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -97,5 +102,7 @@ for _ in range(1):  # solo una vez para cada recarga
         # === FOOTER ===
         st.markdown(f"<div style='text-align:center; color:#388e3c;'>🕐 Última actualización: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</div>", unsafe_allow_html=True)
 
+    # Pausa de 5 segundos y recarga
     time.sleep(5)
     st.experimental_rerun()
+
